@@ -1,9 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
+const STORAGE_KEY = 'task-board2.tasks'
+
+// 保存済みのタスクを読み込む（保存がない・壊れている・読めない場合は空）
+function loadTasks() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
+    return Array.isArray(saved) ? saved : []
+  } catch {
+    return []
+  }
+}
+
 function App() {
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState(loadTasks)
   const [text, setText] = useState('')
+
+  // タスクが変わるたびにブラウザへ保存する
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+    } catch {
+      // 保存できない環境（プライベートモードなど）では保存せずに動かす
+    }
+  }, [tasks])
 
   // タスクを追加する（空白だけの入力は無視）
   const addTask = (e) => {
