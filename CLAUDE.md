@@ -30,6 +30,10 @@
   - `npm run dev` … 開発サーバーの起動（http://localhost:5173）
   - `npm run build` … 本番用ビルド（`dist/` に出力）
   - `npm run lint` … リンターの実行
+  - `npm run preview` … ビルド結果の確認（http://localhost:4173/task-board2/）
+- **公開**: GitHub Pages（https://timmy-0123bot.github.io/task-board2/）
+  - `main` にプッシュすると `.github/workflows/deploy.yml` が自動でビルド・公開する
+  - 公開パスは `vite.config.js` の `base`（`/task-board2/`）。ビルドとプレビュー時のみ適用し、開発サーバーは `/` のまま
 - **構成**:
   - `src/App.jsx` … タスクボード本体（追加・完了切り替え・削除）
   - `src/App.css` … タスクボードのスタイル（完了済みはグレー表示）
