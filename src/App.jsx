@@ -46,10 +46,29 @@ function App() {
   }
 
   const doneCount = tasks.filter((task) => task.done).length
+  const progress = tasks.length === 0 ? 0 : Math.round((doneCount / tasks.length) * 100)
 
   return (
     <main className="board">
-      <h1>タスクボード</h1>
+      <header className="board-header">
+        <p className="eyebrow">TASK BOARD</p>
+        <h1>タスクボード</h1>
+        <div className="progress">
+          <div
+            className="progress-track"
+            role="progressbar"
+            aria-label="完了率"
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div className="progress-bar" style={{ width: `${progress}%` }} />
+          </div>
+          <p className="summary">
+            完了 {doneCount} / 全 {tasks.length} 件
+          </p>
+        </div>
+      </header>
 
       <form className="add-form" onSubmit={addTask}>
         <input
@@ -65,35 +84,43 @@ function App() {
       </form>
 
       {tasks.length === 0 ? (
-        <p className="empty">タスクはまだありません</p>
+        <div className="empty">
+          <p className="empty-title">タスクはまだありません</p>
+          <p className="empty-hint">上の入力欄から最初のタスクを追加しましょう</p>
+        </div>
       ) : (
-        <>
-          <ul className="task-list">
-            {tasks.map((task) => (
-              <li key={task.id} className={task.done ? 'task done' : 'task'}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={task.done}
-                    onChange={() => toggleTask(task.id)}
+        <ul className="task-list">
+          {tasks.map((task) => (
+            <li key={task.id} className={task.done ? 'task done' : 'task'}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={task.done}
+                  onChange={() => toggleTask(task.id)}
+                />
+                <span className="title">{task.title}</span>
+              </label>
+              <button
+                type="button"
+                className="delete"
+                onClick={() => deleteTask(task.id)}
+                aria-label={`「${task.title}」を削除`}
+                title="削除"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path
+                    d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                  <span className="title">{task.title}</span>
-                </label>
-                <button
-                  type="button"
-                  className="delete"
-                  onClick={() => deleteTask(task.id)}
-                  aria-label={`「${task.title}」を削除`}
-                >
-                  削除
-                </button>
-              </li>
-            ))}
-          </ul>
-          <p className="summary">
-            完了 {doneCount} / 全 {tasks.length} 件
-          </p>
-        </>
+                </svg>
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
     </main>
   )
